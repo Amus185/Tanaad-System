@@ -1,0 +1,11 @@
+name = "tanaad-cloud"
+compatibility_date = "2024-12-01"
+pages_build_output_dir = "dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "tanaad-db"
+database_id = "" # Run: npx wrangler d1 create tanaad-db — then paste the ID here
+
+[vars]
+JWT_SECRET = "change-this-to-a-secure-random-string-in-production"
