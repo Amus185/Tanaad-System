@@ -1,18 +1,23 @@
 /**
- * Shared TypeScript interfaces for the React frontend.
- * Mirrors the backend row types but shaped for UI consumption.
+ * Shared TypeScript interfaces — simplified schema.
+ * No teachers, branches, attendance, certificates, grades.
  */
 
 export interface User {
   id: number;
   username: string;
-  email: string;
+  email: string | null;
   role: string;
-  first_name?: string;
-  last_name?: string;
-  phone?: string;
-  avatar?: string;
-  last_login?: string;
+  is_active: boolean;
+  created_at: string;
+  last_login: string | null;
+}
+
+export interface Course {
+  id: number;
+  name: string;
+  is_active: boolean;
+  created_at: string;
 }
 
 export interface Student {
@@ -20,10 +25,7 @@ export interface Student {
   name: string;
   phone: string | null;
   join_date: string;
-  branch_id: number | null;
-  teacher_id: number | null;
-  branch_name?: string;
-  teacher_name?: string;
+  created_at: string;
   enrollments?: Enrollment[];
 }
 
@@ -32,27 +34,9 @@ export interface Enrollment {
   student_id: number;
   course_id: number;
   course_name?: string;
-  enrollment_date: string;
   class_time: string | null;
+  enrollment_date: string;
   status: string;
-  completion_date: string | null;
-}
-
-export interface Teacher {
-  id: number;
-  name: string;
-}
-
-export interface Course {
-  id: number;
-  name: string;
-  teacher_id: number | null;
-  is_active: boolean;
-}
-
-export interface Branch {
-  id: number;
-  name: string;
 }
 
 export interface Payment {

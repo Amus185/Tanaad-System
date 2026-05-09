@@ -1,4 +1,4 @@
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
 const NAV_SECTIONS = [
@@ -12,7 +12,7 @@ const NAV_SECTIONS = [
     title: 'Management',
     items: [
       { to: '/students', icon: 'fas fa-users', label: 'Students' },
-      { to: '/teachers', icon: 'fas fa-chalkboard-teacher', label: 'Teachers' },
+      { to: '/courses', icon: 'fas fa-book', label: 'Courses' },
     ],
   },
   {
@@ -25,10 +25,6 @@ const NAV_SECTIONS = [
     title: 'Academic',
     items: [
       { to: '/exams', icon: 'fas fa-clipboard-list', label: 'Exams' },
-      { to: '/courses', icon: 'fas fa-book', label: 'Courses' },
-      { to: '/attendance', icon: 'fas fa-calendar-check', label: 'Attendance' },
-      { to: '/grades', icon: 'fas fa-award', label: 'Grades' },
-      { to: '/certificates', icon: 'fas fa-certificate', label: 'Certificates' },
     ],
   },
   {
@@ -42,11 +38,9 @@ const NAV_SECTIONS = [
 
 export function Layout() {
   const { user, logout } = useAuth();
-  const location = useLocation();
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh' }}>
-      {/* Sidebar */}
       <aside className="sidebar">
         <div className="sidebar-header">
           <img src="/logo.png" alt="Tanaad College" />
@@ -78,8 +72,6 @@ export function Layout() {
           </button>
         </div>
       </aside>
-
-      {/* Main Content */}
       <main className="main-content">
         <Outlet />
       </main>
