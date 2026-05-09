@@ -6,7 +6,6 @@ export function LoginPage() {
   const { login, isAuthenticated, isLoading } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('admin');
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -18,7 +17,7 @@ export function LoginPage() {
     setError('');
     setSubmitting(true);
     try {
-      await login({ username: username.trim(), password, role });
+      await login({ username: username.trim(), password, role: 'admin' });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
     } finally {
@@ -27,167 +26,67 @@ export function LoginPage() {
   }
 
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '1.5rem',
-        background: 'radial-gradient(ellipse at top, #1e1b4b 0%, #0f172a 50%, #020617 100%)',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
-    >
-      {/* Decorative background orbs */}
+    <div style={{
+      minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
+      padding: '1.5rem', background: 'linear-gradient(135deg, #001a54 0%, #0033A0 50%, #001a54 100%)',
+    }}>
       <div style={{
-        position: 'fixed', top: '10%', left: '15%',
-        width: '300px', height: '300px',
-        background: 'rgba(99, 102, 241, 0.08)',
-        borderRadius: '50%', filter: 'blur(100px)',
-        pointerEvents: 'none',
-      }} />
-      <div style={{
-        position: 'fixed', bottom: '10%', right: '10%',
-        width: '400px', height: '400px',
-        background: 'rgba(139, 92, 246, 0.06)',
-        borderRadius: '50%', filter: 'blur(120px)',
-        pointerEvents: 'none',
-      }} />
-
-      {/* Login Card */}
-      <div
-        className="fade-in"
-        style={{
-          width: '100%',
-          maxWidth: '420px',
-          background: 'rgba(30, 41, 59, 0.6)',
-          backdropFilter: 'blur(24px)',
-          WebkitBackdropFilter: 'blur(24px)',
-          border: '1px solid rgba(148, 163, 184, 0.08)',
-          borderRadius: '1.25rem',
-          padding: '2.5rem',
-          position: 'relative',
-          zIndex: 10,
-        }}
-      >
+        width: '100%', maxWidth: 400, background: '#fff', borderRadius: 12,
+        padding: '2.5rem', boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+      }}>
         {/* Logo */}
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <img
-            src="/logo.png"
-            alt="Tanaad College Logo"
-            style={{
-              width: '100px',
-              height: '100px',
-              borderRadius: '50%',
-              margin: '0 auto 1rem',
-              display: 'block',
-              objectFit: 'cover',
-              animation: 'float 4s ease-in-out infinite',
-              boxShadow: '0 8px 32px rgba(99, 102, 241, 0.3)',
-            }}
-          />
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#fff', marginBottom: '0.35rem' }}>
-            Tanaad College
-          </h1>
-          <p style={{ fontSize: '0.8rem', color: '#94a3b8' }}>
-            Computer Science College — Management Portal
-          </p>
+        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+          <img src="/logo.png" alt="Tanaad College" style={{ width: 100, height: 100, borderRadius: '50%', objectFit: 'cover', margin: '0 auto 1rem' }} />
+          <h1 style={{ fontSize: '1.4rem', fontWeight: 700, color: '#0033A0', marginBottom: 4 }}>Tanaad College</h1>
+          <p style={{ fontSize: '0.8rem', color: '#95a5a6' }}>Computer Science College — Management Portal</p>
         </div>
 
-        {/* Error Banner */}
+        {/* Error */}
         {error && (
-          <div
-            className="fade-in"
-            style={{
-              background: 'rgba(239, 68, 68, 0.1)',
-              border: '1px solid rgba(239, 68, 68, 0.2)',
-              color: '#f87171',
-              fontSize: '0.85rem',
-              borderRadius: '0.75rem',
-              padding: '0.75rem 1rem',
-              marginBottom: '1.25rem',
-            }}
-          >
+          <div style={{ background: 'rgba(231,76,60,0.1)', border: '1px solid rgba(231,76,60,0.3)', color: '#e74c3c', fontSize: '0.85rem', borderRadius: 8, padding: '0.75rem 1rem', marginBottom: '1rem', textAlign: 'center' }}>
             {error}
           </div>
         )}
 
-        {/* Form */}
         <form onSubmit={handleSubmit}>
-          {/* Username */}
-          <div style={{ marginBottom: '1.15rem' }}>
-            <label
-              htmlFor="username"
-              style={{ display: 'block', fontSize: '0.75rem', fontWeight: 500, color: '#94a3b8', marginBottom: '0.5rem' }}
-            >
-              Username
-            </label>
-            <input
-              id="username"
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              autoFocus
-              className="input-field"
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#0033A0', marginBottom: 6 }}>Username</label>
+            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required autoFocus
               placeholder="Enter your username"
+              style={{
+                width: '100%', padding: '0.7rem 1rem', border: '2px solid #e0e0e0', borderRadius: 8,
+                fontSize: '0.9rem', outline: 'none', transition: 'border-color 0.2s', fontFamily: 'inherit',
+              }}
+              onFocus={(e) => e.target.style.borderColor = '#00A54F'}
+              onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
             />
           </div>
 
-          {/* Password */}
-          <div style={{ marginBottom: '1.15rem' }}>
-            <label
-              htmlFor="password"
-              style={{ display: 'block', fontSize: '0.75rem', fontWeight: 500, color: '#94a3b8', marginBottom: '0.5rem' }}
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="input-field"
-              placeholder="Enter your password"
-            />
-          </div>
-
-          {/* Role */}
           <div style={{ marginBottom: '1.5rem' }}>
-            <label
-              htmlFor="role"
-              style={{ display: 'block', fontSize: '0.75rem', fontWeight: 500, color: '#94a3b8', marginBottom: '0.5rem' }}
-            >
-              Role
-            </label>
-            <select
-              id="role"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              className="input-field"
-              style={{ cursor: 'pointer', appearance: 'none' }}
-            >
-              <option value="admin">Administrator</option>
-              <option value="finance">Finance</option>
-              <option value="teacher">Teacher</option>
-              <option value="registrar">Registrar</option>
-            </select>
+            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#0033A0', marginBottom: 6 }}>Password</label>
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required
+              placeholder="Enter your password"
+              style={{
+                width: '100%', padding: '0.7rem 1rem', border: '2px solid #e0e0e0', borderRadius: 8,
+                fontSize: '0.9rem', outline: 'none', transition: 'border-color 0.2s', fontFamily: 'inherit',
+              }}
+              onFocus={(e) => e.target.style.borderColor = '#00A54F'}
+              onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
+            />
           </div>
 
-          {/* Submit */}
-          <button type="submit" disabled={submitting} className="btn-primary">
+          <button type="submit" disabled={submitting} style={{
+            width: '100%', padding: '0.8rem', border: 'none', borderRadius: 8, color: '#fff',
+            fontWeight: 600, fontSize: '0.9rem', cursor: submitting ? 'not-allowed' : 'pointer',
+            background: 'linear-gradient(135deg, #00A54F, #00D360)', fontFamily: 'inherit',
+            boxShadow: '0 4px 15px rgba(0,165,79,0.3)', transition: 'all 0.2s',
+            opacity: submitting ? 0.6 : 1,
+          }}>
             {submitting ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 
-        <p style={{
-          textAlign: 'center',
-          fontSize: '0.68rem',
-          color: '#475569',
-          marginTop: '1.75rem',
-        }}>
+        <p style={{ textAlign: 'center', fontSize: '0.7rem', color: '#95a5a6', marginTop: '1.5rem' }}>
           Tanaad Computer Science College &copy; {new Date().getFullYear()}
         </p>
       </div>

@@ -1,10 +1,9 @@
 /**
- * Auth context — manages JWT state across the React app.
- * Replaces Flask-Login's current_user.
+ * Auth context — mock login for UI preview.
+ * Will switch to real JWT when D1 backend is deployed.
  */
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
-import { api, setToken, clearToken } from '@/lib/api';
-import type { User, LoginRequest, LoginResponse } from '@/types';
+import type { User, LoginRequest } from '@/types';
 
 interface AuthState {
   user: User | null;
@@ -20,32 +19,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Hydrate user from token on mount
+  // Hydrate user from localStorage on mount
   useEffect(() => {
-    const token = localStorage.getItem('tanaad_token');
-    if (!token) {
-      setIsLoading(false);
-      return;
+    const saved = localStorage.getItem('tanaad_user');
+    if (saved) {
+      try { setUser(JSON.parse(saved)); } catch { /* ignore */ }
     }
-
-    api
-      .get<User>('/auth/me')
-      .then(setUser)
-      .catch(() => {
-        clearToken();
-        setUser(null);
-      })
-      .finally(() => setIsLoading(false));
+    setIsLoading(false);
   }, []);
 
   const login = useCallback(async (credentials: LoginRequest) => {
-    const response = await api.post<LoginResponse>('/auth/login', credentials);
-    setToken(response.token);
-    setUser(response.user);
+    // Mock login — accepts any username/password for UI testing
+    const mockUser: User = {
+      id: 1,
+      username: credentials.username,
+      email: `${credentials.username}@tanaad.edu`,
+      role: 'admin',
+      is_active: true,
+      created_at: new Date().toISOString(),
+      last_login: new Date().toISOString(),
+    };
+    localStorage.setItem('tanaad_user', JSON.stringify(mockUser));
+    setUser(mockUser);
   }, []);
 
   const logout = useCallback(() => {
-    clearToken();
+    localStorage.removeItem('tanaad_user');
     setUser(null);
   }, []);
 
