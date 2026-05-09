@@ -40,7 +40,7 @@ export function Layout() {
   const { user, logout } = useAuth();
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
+    <div style={{ minHeight: '100vh', background: '#f5f7fa' }}>
       <aside className="sidebar">
         <div className="sidebar-header">
           <img src="/logo.png" alt="Tanaad College" />

@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
+import Select from 'react-select';
+
 const COURSES = ['A+','A++','Multimedia','Web Design','Javascript','Networking','Database','Programming','Basic Computer Application'];
 const METHODS = ['Cash', 'Bank Transfer', 'Mobile Money'];
 const FEE_TYPES = ['course', 'certificate', 'app'];
@@ -13,14 +15,24 @@ const MOCK_STUDENTS = [
 
 export function AddPaymentPage() {
   const navigate = useNavigate();
-  const [studentId, setStudentId] = useState('');
+  const [studentId, setStudentId] = useState<number | null>(null);
   const [amount, setAmount] = useState('');
   const [method, setMethod] = useState('Cash');
   const [feeType, setFeeType] = useState('course');
   const [description, setDescription] = useState('');
 
+  // Prepare options for react-select
+  const studentOptions = MOCK_STUDENTS.map(s => ({
+    value: s.id,
+    label: `${s.name} — ${s.phone}`
+  }));
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!studentId) {
+      alert('Please select a student');
+      return;
+    }
     alert('Payment saved (mock)');
     navigate('/payments');
   }
@@ -38,13 +50,26 @@ export function AddPaymentPage() {
       <div style={{ background: '#fff', borderRadius: 10, padding: '2rem', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', maxWidth: 700 }}>
         <form onSubmit={handleSubmit}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
-            {/* Student */}
+            {/* Student Searchable Dropdown */}
             <div style={{ gridColumn: '1 / -1' }}>
               <label style={{ display: 'block', marginBottom: 6, fontWeight: 600, color: '#0033A0', fontSize: '0.85rem' }}>Student *</label>
-              <select className="form-control" style={{ width: '100%' }} value={studentId} onChange={(e) => setStudentId(e.target.value)} required>
-                <option value="">Select Student</option>
-                {MOCK_STUDENTS.map((s) => <option key={s.id} value={s.id}>{s.name} — {s.phone}</option>)}
-              </select>
+              <Select
+                options={studentOptions}
+                placeholder="Search by name or phone..."
+                isClearable
+                isSearchable
+                onChange={(option) => setStudentId(option ? option.value : null)}
+                styles={{
+                  control: (base) => ({
+                    ...base,
+                    borderColor: '#e0e0e0',
+                    padding: '2px',
+                    borderRadius: '6px',
+                    boxShadow: 'none',
+                    '&:hover': { borderColor: '#00A54F' }
+                  })
+                }}
+              />
             </div>
 
             {/* Amount */}
