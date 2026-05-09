@@ -6,6 +6,7 @@ import { DashboardPage } from '@/pages/DashboardPage';
 import { StudentsPage } from '@/pages/StudentsPage';
 import { CoursesPage } from '@/pages/CoursesPage';
 import { PaymentsPage } from '@/pages/PaymentsPage';
+import { AddPaymentPage } from '@/pages/AddPaymentPage';
 import { ExamsPage } from '@/pages/ExamsPage';
 import { UsersPage } from '@/pages/UsersPage';
 import { SettingsPage } from '@/pages/SettingsPage';
@@ -25,6 +26,7 @@ export function App() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/students" element={<StudentsPage />} />
           <Route path="/courses" element={<CoursesPage />} />
+          <Route path="/payments/add" element={<AddPaymentPage />} />
           <Route path="/payments" element={<PaymentsPage />} />
           <Route path="/exams" element={<ExamsPage />} />
           <Route path="/users" element={<UsersPage />} />
