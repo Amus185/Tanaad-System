@@ -33,6 +33,12 @@ export function PaymentsPage() {
     setMethodFilter(''); setFeeTypeFilter(''); setStatusFilter('');
   }
 
+  function handleDelete(id: number) {
+    if (confirm('Are you sure you want to delete this payment? This action cannot be undone.')) {
+      alert(`Payment ${id} deleted (mock)`);
+    }
+  }
+
   return (
     <>
       <div className="page-header">
@@ -40,6 +46,7 @@ export function PaymentsPage() {
         <Link to="/payments/add" className="btn btn-primary"><i className="fas fa-plus"></i> Add New</Link>
       </div>
 
+      {/* Filters */}
       <div className="filter-section">
         <div className="filter-grid">
           <div style={{ position: 'relative', flex: 1, minWidth: 200 }}>
@@ -58,21 +65,24 @@ export function PaymentsPage() {
           </select>
           <select className="form-control" value={feeTypeFilter} onChange={(e) => setFeeTypeFilter(e.target.value)}>
             <option value="">All Fee Types</option>
-            {Object.entries(FEE_TYPES).map(([ft, amt]) => <option key={ft} value={ft}>{ft.charAt(0).toUpperCase() + ft.slice(1)} (${amt})</option>)}
+            {Object.entries(FEE_TYPES).map(([ft, amt]) => (
+              <option key={ft} value={ft}>{ft.charAt(0).toUpperCase() + ft.slice(1)} (${amt})</option>
+            ))}
           </select>
           <select className="form-control" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
             <option value="">All Statuses</option>
             <option value="Paid">Paid</option>
             <option value="Pending">Pending</option>
           </select>
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <button className="btn btn-success"><i className="fas fa-filter"></i> Apply</button>
-            <button className="btn btn-secondary" onClick={clearFilters}><i className="fas fa-sync"></i> Clear</button>
-            <button className="btn btn-success"><i className="fas fa-file-export"></i> Export</button>
-          </div>
+        </div>
+        <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem' }}>
+          <button className="btn btn-success"><i className="fas fa-filter"></i> Apply</button>
+          <button className="btn btn-secondary" onClick={clearFilters}><i className="fas fa-sync"></i> Clear</button>
+          <button className="btn btn-success"><i className="fas fa-file-export"></i> Export</button>
         </div>
       </div>
 
+      {/* Payment Records */}
       <div className="content-card">
         <div className="card-header">
           <h3 className="card-title">Payment Records</h3>
@@ -80,25 +90,54 @@ export function PaymentsPage() {
         </div>
         <div style={{ overflowX: 'auto' }}>
           <table className="data-table">
-            <thead><tr><th>ID</th><th>Student</th><th>Phone</th><th>Courses</th><th>Total</th><th>Balance</th><th>Method</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Student</th>
+                <th>Phone</th>
+                <th>Courses</th>
+                <th>Amount</th>
+                <th>Balance</th>
+                <th>Method</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
             <tbody>
               {filtered.length === 0 ? (
-                <tr><td colSpan={10} className="empty-state"><i className="fas fa-money-bill-wave"></i><h4>No payments found</h4><p>Add new payments or adjust filters</p></td></tr>
+                <tr>
+                  <td colSpan={10} className="empty-state">
+                    <i className="fas fa-money-bill-wave"></i>
+                    <h4>No payments found</h4>
+                    <p>Add new payments or adjust your filters</p>
+                  </td>
+                </tr>
               ) : filtered.map((p) => (
                 <tr key={p.id}>
                   <td>PAY-{String(p.id).padStart(5, '0')}</td>
                   <td style={{ fontWeight: 600 }}>{p.student_name}</td>
                   <td>{p.phone}</td>
-                  <td><div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>{p.courses.map((c) => <span key={c} className="course-pill">{c}</span>)}</div></td>
+                  <td>
+                    <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+                      {p.courses.map((c) => <span key={c} className="course-pill">{c}</span>)}
+                    </div>
+                  </td>
                   <td style={{ fontWeight: 600, color: '#00A54F' }}>${p.total.toFixed(2)}</td>
-                  <td>${p.balance.toFixed(2)}</td>
+                  <td style={{ fontWeight: 600, color: p.balance > 0 ? '#e74c3c' : '#27ae60' }}>
+                    ${p.balance.toFixed(2)}
+                  </td>
                   <td><span className="fee-type-badge">{p.method}</span></td>
-                  <td><span className={`status-badge ${p.status === 'Paid' ? 'status-active' : 'status-inactive'}`}>{p.status}</span></td>
-                  <td>{p.date}</td>
+                  <td>
+                    <span className={`status-badge ${p.status === 'Paid' ? 'status-active' : 'status-inactive'}`}>
+                      {p.status}
+                    </span>
+                  </td>
+                  <td style={{ fontSize: '0.85rem', color: '#95a5a6' }}>{p.date}</td>
                   <td>
                     <div className="action-buttons">
                       <Link to={`/payments/edit/${p.id}`} className="btn btn-warning"><i className="fas fa-edit"></i></Link>
-                      <button className="btn btn-danger" onClick={() => confirm('Delete this payment?')}><i className="fas fa-trash"></i></button>
+                      <button className="btn btn-danger" onClick={() => handleDelete(p.id)}><i className="fas fa-trash"></i></button>
                     </div>
                   </td>
                 </tr>
@@ -107,6 +146,8 @@ export function PaymentsPage() {
           </table>
         </div>
       </div>
+
+      {/* FAB */}
       <Link to="/payments/add" className="fab" title="Add New Payment"><i className="fas fa-plus"></i></Link>
     </>
   );
